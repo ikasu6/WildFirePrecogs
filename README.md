@@ -1,5 +1,5 @@
 # WildFirePrecogs
-## Repository for the WildFirePrecogs-AI2 Feature Development Activity
+## Repository for the WildFirePrecogs - Feature Development Activity
 Features To Devlope:
 
 1)Automatic Image Capture Mode
