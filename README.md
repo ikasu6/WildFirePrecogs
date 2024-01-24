@@ -8,7 +8,7 @@ Features To Devlope:
 
 * We will be working in a sequential manner, creating the automatic image capture method first, then moving on to the virtual frame mode next, and then finally to the image comparison mode. 
 For the demonstration, we are focussed on the image capture mode itself at the time being, the rest of the work is sequential and will be added as per the team’s progress.
-*
+//
 * #### Automatic Image Capture
 * Data Collection: Capturing images through the camera
 * Data Processing: Computer Vision, detecting the sample plot frame
@@ -17,7 +17,7 @@ For the demonstration, we are focussed on the image capture mode itself at the t
 * Data Collection: Image capture through the camera, collecting location data
 * Data Processing: Using the image data captured along with the location data, having points 
 * Presenting/Interaction: Real-time frame projection
-*
+//
 * #### Comparison Mode
 * Data Collection: Images Captured from the previous two methods
 * Data Processing: Converting the images to arrays and using a similarity detection algorithm to check the similarity between all the images
