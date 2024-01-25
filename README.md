@@ -1,7 +1,8 @@
 # WildFirePrecogs
 ## Repository for the WildFirePrecogs - Feature Development Activity
 Features To Devlope:
-Home Page
+
+ Home Page
 
 1)Automatic Image Capture Mode
 
