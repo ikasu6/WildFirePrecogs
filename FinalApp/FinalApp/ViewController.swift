@@ -162,7 +162,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             DispatchQueue.main.async {
                 
                 guard let results = request.results as? [VNRectangleObservation] else { return }
-                print("_______________")
+                print("______________")
                 print(results)
                 self.removeMask()
                 
