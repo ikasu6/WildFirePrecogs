@@ -12,6 +12,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     private let videoDataOutput = AVCaptureVideoDataOutput()
     private var isTapped = false
     private var maskLayer = CAShapeLayer()
+    private var isProcessingDetections: Bool = true
+
     
     
 
@@ -99,41 +101,46 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
 
     
-    private func detectRectangle2(in image: CVPixelBuffer) {
-
-        let request = VNDetectRectanglesRequest(completionHandler: { (request: VNRequest, error: Error?) in
-            DispatchQueue.main.async {
-                
-                guard let results = request.results as? [VNRectangleObservation] else { return }
-                print("_______________")
-                print(results)
-                self.removeMask()
-                
-                guard let rect = results.first else{return}
-                    self.drawBoundingBox(rect: rect)
-                    if self.isTapped{
-                        self.isTapped = false
-                        self.doPerspectiveCorrection(rect, from: image)
-                        
-                    }
-            }
-        })
-        
-        //Setting the Parameters of VNrectangle detection request
-        request.minimumAspectRatio = VNAspectRatio(1.3)
-        request.maximumAspectRatio = VNAspectRatio(1.6)
-        request.minimumSize = Float(0.5)
-        request.maximumObservations = 1
-        
-        
-        let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: image, options: [:])
-        try? imageRequestHandler.perform([request])
-        
-    }
+//    private func detectRectangle2(in image: CVPixelBuffer) {
+//
+//        let request = VNDetectRectanglesRequest(completionHandler: { (request: VNRequest, error: Error?) in
+//            DispatchQueue.main.async {
+//
+//                guard let results = request.results as? [VNRectangleObservation] else { return }
+//                print("_______________")
+//                print(results)
+//                self.removeMask()
+//
+//                guard let rect = results.first else{return}
+//                    self.drawBoundingBox(rect: rect)
+//                    if self.isTapped{
+//                        self.isTapped = false
+//                        self.doPerspectiveCorrection(rect, from: image)
+//
+//                    }
+//            }
+//        })
+//
+//        //Setting the Parameters of VNrectangle detection request
+//        request.minimumAspectRatio = VNAspectRatio(1.3)
+//        request.maximumAspectRatio = VNAspectRatio(1.6)
+//        request.minimumSize = Float(0.5)
+//        request.maximumObservations = 1
+//
+//
+//        let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: image, options: [:])
+//        try? imageRequestHandler.perform([request])
+//
+//    }
+    
+    
     
     
     
     private func detectRectangle(in image: CVPixelBuffer) {
+        guard isProcessingDetections else {
+            return
+        }
         // Configuring  the rectangle detection request
         let rectangleDetectionRequest = VNDetectRectanglesRequest { [weak self] request, error in
             guard let self = self else { return }
@@ -166,7 +173,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     private var autoCaptureEnabled: Bool = true
 
 
-    private func processDetectionResults(_ results: [Any]?, in image: CVPixelBuffer) {
+    private func processDetectionResults(_ results: [Any]?, in image: CVPixelBuffer ) {
         // any rectangle observations
         guard let observations = results as? [VNRectangleObservation], !observations.isEmpty else {
             DispatchQueue.main.async { [weak self] in
@@ -213,10 +220,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             // Resetting autoCaptureEnabled flag after a delay to allow for new captures
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) { // 5 seconds delay
                 self.autoCaptureEnabled = true
-                self.removeMask()
-                //sleep(5)
                 self.resetDetectionState()
-                
             }
         }
     }
@@ -236,7 +240,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // Implementing comparison logic here.
         let lastCenter = lastRectangle.boundingBox.origin
         let currentCenter = rectangle.boundingBox.origin
-        let distanceThreshold: CGFloat = 0.2 // Adjust based on your needs
+        let distanceThreshold: CGFloat = 0.1 // Adjust based on your needs
         let distance = hypot(lastCenter.x - currentCenter.x, lastCenter.y - currentCenter.y)
         return distance > distanceThreshold
     }
@@ -354,14 +358,26 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
     }
     
+//    func showAlertWith(title: String, message: String) {
+//        let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
+//        ac.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+//            self.resetDetectionState() // Reset when the user acknowledges
+//        }))
+//        present(ac, animated: true)
+//    }
+    
     func showAlertWith(title: String, message: String) {
+        // Pause detections
+        isProcessingDetections = false
+
         let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-            self.resetDetectionState() // Reset when the user acknowledges
+            // Resume detections
+            self.isProcessingDetections = true
+            self.resetDetectionState() // Reset detection state if needed
         }))
         present(ac, animated: true)
     }
-    
     
     func removeMask() {
             maskLayer.removeFromSuperlayer()
