@@ -101,37 +101,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
 
     
-//    private func detectRectangle2(in image: CVPixelBuffer) {
-//
-//        let request = VNDetectRectanglesRequest(completionHandler: { (request: VNRequest, error: Error?) in
-//            DispatchQueue.main.async {
-//
-//                guard let results = request.results as? [VNRectangleObservation] else { return }
-//                print("_______________")
-//                print(results)
-//                self.removeMask()
-//
-//                guard let rect = results.first else{return}
-//                    self.drawBoundingBox(rect: rect)
-//                    if self.isTapped{
-//                        self.isTapped = false
-//                        self.doPerspectiveCorrection(rect, from: image)
-//
-//                    }
-//            }
-//        })
-//
-//        //Setting the Parameters of VNrectangle detection request
-//        request.minimumAspectRatio = VNAspectRatio(1.3)
-//        request.maximumAspectRatio = VNAspectRatio(1.6)
-//        request.minimumSize = Float(0.5)
-//        request.maximumObservations = 1
-//
-//
-//        let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: image, options: [:])
-//        try? imageRequestHandler.perform([request])
-//
-//    }
+
     
     
     
