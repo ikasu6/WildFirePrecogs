@@ -215,7 +215,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         DispatchQueue.main.async {
             self.doPerspectiveCorrection(rectangleObservation, from: buffer)
             //  popup notification
-            self.showAlertWith(title: "Image Captured", message: "The image has been automatically captured and saved.")
+            self.showAlertWith(title: "Image Captured", message: "The image has been automatically captured and saved click OK to proceed.")
             
             // Resetting autoCaptureEnabled flag after a delay to allow for new captures
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) { // 5 seconds delay
